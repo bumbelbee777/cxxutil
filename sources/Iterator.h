@@ -1,10 +1,11 @@
 #pragma once
 
+namespace Cxxutil {
 class Iterator {
-    int CurrentIndex;
     T *Pointer;
 public:
     Iterator(T *Pointer) : Pointer(Pointer) {}
+
     Iterator &operator++() {
         Pointer++;
         return *this;
@@ -15,6 +16,16 @@ public:
         return Result;
     }
 
+    Iterator &operator--() {
+        Pointer--;
+        return *this;
+    }
+    Iterator operator--(int) {
+        Iterator Result(*this);
+        Pointer--;
+        return Result;
+    }
+
     T &operator*() const {
         return *Pointer;
     }
@@ -22,11 +33,38 @@ public:
         return Pointer;
     }
 
-    bool operator==(const Iterator& other) const {
-        return ptr_ == other.ptr_;
+    bool operator==(const Iterator& Other) const {
+        return Pointer == Other.Pointer;
+    }
+    bool operator!=(const Iterator& Other) const {
+        return !(*this == Other);
     }
 
-    bool operator!=(const Iterator& other) const {
-        return !(*this == other);
+    friend Iterator &operator+=(ptrdiff_t n) {
+        Pointer += n;
+        return *this;
+    }
+    friend Iterator &operator-=(ptrdiff_t n) {
+        Pointer -= n;
+        return *this;
+    }
+
+    friend Iterator operator+(Iterator LHS, const ptrdiff_t RHS) {
+        LHS += RHS;
+        return LHS;
+    }
+    friend Iterator operator+(const ptrdiff_t &LHS, Iterator RHS) {
+        RHS += LHS;
+        return RHS;
+    }
+
+    friend Iterator operator-(Iterator LHS, const ptrdiff_t RHS) {
+        LHS -= RHS;
+        return LHS;
+    }
+    friend Iterator operator-(const ptrdiff_t &LHS, Iterator RHS) {
+        RHS -= LHS;
+        return RHS;
     }
 };
+}

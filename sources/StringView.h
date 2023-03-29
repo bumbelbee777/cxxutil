@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstring>
+#include <compare>
+
+namespace Cxxutil {
 class StringView {
   	const char *Data_ = nullptr;
   	size_t Size_ = 0;
@@ -24,4 +28,28 @@ public:
   	char At(size_t Position) { return Data_[Position]; }
 
   	static constexpr size_t npos = static_cast<size_t>(-1);
+
+  	std::strong_ordering operator<=>(const String *Other) const {
+		int Result = strcmp(Data_, Other->Data_);
+		if(Result < 0) return std::strong_ordering::less;
+		if(Result > 0) return std::strong_ordering::greater;
+		if(Result == 0) return std::strong_ordering::equal;
+  	}
+
+	bool operator<(StringView *Other) const {
+		return (this <=> Other) == std::strong_ordering::less;
+  	}
+  	bool operator>(StringView *Other) const {
+		return (this <=> Other) == std::strong_ordering::greater;
+  	}
+  	bool operator==(StringView *Other) const {
+		return (this <=> Other) == std::strong_ordering::equal;
+  	}
+    bool operator<=(StringView *Other) const {
+        return (this <=> Other) != std::strong_ordering::greater;
+    }
+    bool operator>=(StringView *Other) const {
+        return (this <=> Other) != std::strong_ordering::less;
+    }
 };
+}

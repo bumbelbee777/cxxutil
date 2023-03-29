@@ -3,6 +3,7 @@
 #include <compare>
 #include <cstring>
 
+namespace Cxxutil {
 class String {
   	char *Data_;
   	size_t Size_;
@@ -89,3 +90,4 @@ public:
 		return (this <=> Other) == std::strong_ordering::less;
   	}
 };
+}

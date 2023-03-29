@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+namespace Cxxutil {
 template <typename T>
 class Result {
 public:
@@ -41,3 +42,4 @@ private:
     T Value_;
     std::exception_ptr Error_;
 };
+}

@@ -1,5 +1,6 @@
 #pragma once
 
+namespace Cxxutil {
 template<typename Function> class Function;
 
 template<typename ReturnValue, typename... Arguments> class Function<ReturnValue(Arguments...)> {
@@ -47,3 +48,4 @@ private:
     };
     Callable *callable_;
 };
+}

@@ -1,5 +1,6 @@
 #pragma once
 
+namespace Cxxutil {
 template <typename T> class Optional {
 public:
     Optional() : HasValue_(false) {}
@@ -12,3 +13,4 @@ private:
     T Value_;
     bool HasValue_;
 };
+}

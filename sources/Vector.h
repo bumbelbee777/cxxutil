@@ -3,6 +3,7 @@
 #include <Function.h>
 #include <algorithm>
 
+namespace Cxxutil {
 template<class T> class Vector {
   	T *VectorData;
   	int VectorCapacity;
@@ -13,7 +14,7 @@ template<class T> class Vector {
 		T NewData = new T[VectorCapacity];
 		std::copy(VectorData, VectorData + VectorSize, NewVectorData);
 		delete[] VectorData;
-		VectorData = NewVectorData;
+		VectorData = NewData;
   	}
 
 public:
@@ -45,6 +46,11 @@ public:
 	T begin() { return VectorData[0]; }
 	T end() { return VectorData[VectorSize]; }
 
+	void ForEach(Function<void(T&, int)> Expression) {
+		for(int i = 0; i < VectorSize; i++) Expression(VectorData[i], i);
+	}
+
   	void PushBack(const T &Value) { if(Full()) return; else VectorData[VectorSize++] = Value; }
   	void PopBack() { if(Empty()) return; else VectorSize--; }
 };
+}

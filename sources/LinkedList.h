@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+namespace Cxxutil {
 template<class T> class LinkedList {
     struct Item {
         Item(const T &Value) : Value(Value) {}
@@ -37,3 +38,4 @@ public:
         while(!Empty()) PopFront();
     }
 };
+}
