@@ -1,14 +1,19 @@
 # Cxxutil.
 
-A lightweight C++20 library implementing various STL containers and other data structures such as:
+A lightweight and freestanding C++20 library implementing various STL containers, allocators and other data structures such as:
 - Vectors (`Vector<T>`).
-- Arrays (`Array<t>`).
+- Arrays (`Array<T>`).
 - Binary search tree (`BinarySearchTree<T>`).
 - Functions (`Function<T>`).
 - Iterators (`Iterator<T>`).
 - Optional types (`Optional<T>`).
 - Mutable and non-mutable strings (`String<T>` and `StringView<T>` respectively).
 - Queues (`Queue<T>`).
+- Heap allocator (`HeapAllocator<T>`).
+- Exceptions (`Exception`, `ExceptionPointer`).
+- Smart pointers like boxes (`Box<T>`).
+- Maps and hashmaps (`Map<T>` and `Hashmap<T>` respectively).
+And more!
 
 # Example
 
@@ -29,7 +34,7 @@ int main(int argc, char **argv) {
     MyVector.PushBack(2);
     MyVector.PushBack(3);
     MyVector.ForEach([](int &Item, int Index) {
-        std::cout << "Item: " << Item << " at " << "Index: " << Index << '\n';
+        std::cout << "Item: " << Item << " at index: " << Index << '\n';
     });
     return 0;
 }

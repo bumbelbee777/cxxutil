@@ -14,7 +14,7 @@ template<class T> class Vector {
 		T NewData = new T[VectorCapacity];
 		std::copy(VectorData, VectorData + VectorSize, NewVectorData);
 		delete[] VectorData;
-		VectorData = NewData;
+		VectorData = NewVectorData;
   	}
 
 public:
@@ -31,26 +31,39 @@ public:
   	bool Full() { return VectorSize == VectorCapacity; }
 
 	void ForEach(Function<void(T&, int)> Expression) {
-		for(int i = 0; i < VectorSize; i++) 
-			Expression(VectorData[i], i);
+		for(int i = 0; i < VectorSize; i++) Expression(VectorData[i], i);
 	}
 
 	void Swap(Vector &Other) {
-		VectorSize = Other.Size();
-		VectorCapacity = Other.Capacity();
-		VectorData = Other.VectorData;
+		std::swap(this->VectorSize, Other->VectorSize);
+		std::swap(this->VectorData, Other->VectorData);
+		std::swap(this->VectorCapacity, Other->VectorCapacity);
   	}
 
 	void operator=(Vector &Other) { Swap(Other); }
 
-	T begin() { return VectorData[0]; }
-	T end() { return VectorData[VectorSize]; }
+	T *begin() { return &VectorData[0]; }
+	T *end() { return &VectorData[VectorSize]; }
 
-	void ForEach(Function<void(T&, int)> Expression) {
-		for(int i = 0; i < VectorSize; i++) Expression(VectorData[i], i);
+  	void PushBack(const T &Value) { if(Full()) Resize(); else VectorData[VectorSize++] = Value; }
+  	void PopBack() { if(Empty()) return; else VectorSize--; }
+
+	void RemoveByValue(const T &Value) {
+		for(int i = 0; i < VectorSize; i++) {
+			if(VectorData[i] == Value) { 
+				Erase(Value);
+				break;
+			}
+		}
+	}
+	void Erase(const int Index) { 
+		if(Index < 0 || Index >= VectorSize) return;
+		for(int i = Index; i < VectorSize - 1; i++) {
+			VectorData[i] = VectorData[i + 1];
+		}
+		VectorSize--;
 	}
 
-  	void PushBack(const T &Value) { if(Full()) return; else VectorData[VectorSize++] = Value; }
-  	void PopBack() { if(Empty()) return; else VectorSize--; }
+	void Clear() { VectorSize = 0; }
 };
 }

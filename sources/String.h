@@ -67,6 +67,9 @@ public:
 		Size_ = StringLength;
   	}
 
+	bool StartsWith(const char Prefix) {}
+	bool EndsWith(const char Suffix) {}
+
   	std::strong_ordering operator<=>(const String *Other) const {
 		int Result = strcmp(Data_, Other->Data_);
 		if(Result < 0) return std::strong_ordering::less;
