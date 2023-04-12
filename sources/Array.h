@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cstddef>
-#include <cstring>
-#include <stdexcept>
+#include <Cxxutil.h
 #include <Function.h>
 
 namespace Cxxutil {
@@ -10,7 +8,7 @@ template<class T, std::size_t size>
 class Array {
     T Data_[size];
 public:
-    Array() { std::memset(Data_, 0, size * sizeof(T)); }
+    Array() { MEMSET(Data_, 0, size * sizeof(T)); }
     ~Array() {}
 
     T &operator[](size_t Index) {
@@ -58,7 +56,7 @@ public:
         return &Data_[size];
     }
 
-    void ForEach(Function<void(T&, int)> Expression) {
+    void ForEach(FUNCTION<void(T&, int)> Expression) {
         for(int i = 0; i < size; i++) Expression(Data_[i], i);
     }
 };

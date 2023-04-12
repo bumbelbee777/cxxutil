@@ -5,7 +5,7 @@ A lightweight and freestanding C++20 library implementing various STL containers
 - Arrays (`Array<T>`).
 - Binary search tree (`BinarySearchTree<T>`).
 - Functions (`Function<T>`).
-- Iterators (`Iterator<T>`).
+- Random access iterator (`Iterator<T>`).
 - Optional types (`Optional<T>`).
 - Mutable and non-mutable strings (`String<T>` and `StringView<T>` respectively).
 - Queues (`Queue<T>`).
@@ -13,29 +13,83 @@ A lightweight and freestanding C++20 library implementing various STL containers
 - Exceptions (`Exception`, `ExceptionPointer`).
 - Smart pointers like boxes (`Box<T>`).
 - Maps and hashmaps (`Map<T>` and `Hashmap<T>` respectively).
+- Regular expressions (`Regex`).
+- Slices (`Slice<T>`).
+- Graphs (`Graph<T>`).
+- Spinlocks and mutexes (`Spinlock` and `Mutex<T>` respectively).
+- FNV-1a algorithm and djb2 hashing algorithm for strings (`Hash<T>` and `Hash<String>` respectively).
+
 And more!
+
+**Keep in mind it's still a work in progress and many features are incomplete and/or won't work as intended.**
 
 # Example
 
 ```cxx
-#include <All.h>
 #include <iostream>
+#include <All.h>
 
 using namespace Cxxutil;
 
-int main(int argc, char **argv) {
-    Array<int, 5> MyArray = {1, 2, 3, 4, 5};
-    std::cout << "Size of array is: " << MyArray.Size();
-    MyArrat.ForEach([](int &Item, int Index) {
-        std::cout << "Item: " << Item << " at " << "Index: " << Index << '\n';
-    });
-    Vector<int> MyVector;
-    MyVector.PushBack(1);
-    MyVector.PushBack(2);
-    MyVector.PushBack(3);
-    MyVector.ForEach([](int &Item, int Index) {
-        std::cout << "Item: " << Item << " at index: " << Index << '\n';
-    });
-    return 0;
+int main() {
+  // BinarySearchTree example
+  BinarySearchTree<int> bst;
+  bst.Insert(5);
+  bst.Insert(2);
+  bst.Insert(8);
+  bst.Insert(1);
+  bst.Insert(4);
+  bst.Insert(7);
+  bst.Insert(9);
+
+  std::cout << "Binary Search Tree:\n";
+  bst.ForEach([](int& value, int index) {
+    std::cout << index << ": " << value << '\n';
+  });
+
+  std::cout << "Inorder traversal:\n";
+  bst.InOrderTraversal(std::cout);
+  std::cout << "\n";
+
+  std::cout << "Preorder traversal:\n";
+  bst.PreOrderTraversal(std::cout);
+  std::cout << "\n";
+
+  std::cout << "Postorder traversal:\n";
+  bst.PostOrderTraversal(std::cout);
+  std::cout << "\n";
+
+  std::cout << "Searching for value 7: " << std::boolalpha << bst.Search(7) << '\n';
+  std::cout << "Searching for value 3: " << std::boolalpha << bst.Search(3) << '\n';
+
+  bst.Remove(2);
+  std::cout << "After removing value 2:\n";
+  bst.ForEach([](int& value, int index) {
+    std::cout << index << ": " << value << '\n';
+  });
+
+  // LinkedList example
+  LinkedList<int> ll;
+  ll.Append(1);
+  ll.Append(2);
+  ll.Append(3);
+  ll.Append(4);
+  ll.Append(5);
+
+  // Queue example
+  Queue<int> queue;
+  queue.Enqueue(1);
+  queue.Enqueue(2);
+  queue.Enqueue(3);
+  queue.Enqueue(4);
+  queue.Enqueue(5);
+
+  std::cout << "Queue:\n";
+  while(!queue.IsEmpty()) {
+    std::cout << queue.Front() << '\n';
+    queue.Dequeue();
+  }
+
+  return 0;
 }
 ```

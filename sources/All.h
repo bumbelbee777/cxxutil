@@ -10,3 +10,15 @@
 #include <String.h>
 #include <StringView.h>
 #include <Vector.h>
+#include <Map.h>
+#include <Hash.h>
+#include <HashMap.h>
+#include <Strong.h>
+#include <Pair.h>
+#include <Slice.h>
+#include <Regex.h>
+#include <Locks.h>
+#include <BinarySearchTree.h>
+#include <Strong.h>
+#include <Async.h>
+#include <Graph.h>

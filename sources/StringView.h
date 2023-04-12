@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstring>
+#include <Cxxutil.h>
 #include <compare>
 
 namespace Cxxutil {
@@ -31,5 +31,28 @@ public:
 
   	bool StartsWith(const char Prefix) {}
   	bool EndsWith(const char Suffix) {}
+
+  	std::strong_ordering operator<=>(const String *Other) const {
+		int Result = strcmp(Data_, Other->Data_);
+		if(Result < 0) return std::strong_ordering::less;
+		if(Result > 0) return std::strong_ordering::greater;
+		if(Result == 0) return std::strong_ordering::equal;
+  	}	
+
+  	bool operator<(const String *Other) const {
+		return (this <=> Other) == std::strong_ordering::less;
+  	}
+  	bool operator>(const String *Other) const {
+		return (this <=> Other) == std::strong_ordering::greater;
+  	}
+  	bool operator==(const String *Other) const {
+		return (this <=> Other) == std::strong_ordering::equal;
+  	}
+  	bool operator<=(const String *Other) const {
+		return (this <=> Other) == std::strong_ordering::greater;
+ 	}
+  	bool operator>=(const String *Other) const {
+		return (this <=> Other) == std::strong_ordering::less;
+  	}
 };
 }

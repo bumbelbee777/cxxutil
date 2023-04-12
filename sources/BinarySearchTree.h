@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <iostream>
+#include <Cxxutil.h>
 
 namespace Cxxutil {
 template<class T> class BinarySearchTree {
@@ -26,7 +27,7 @@ template<class T> class BinarySearchTree {
         else return true;
     }
 
-    void InOrderHelper(const std::unique_ptr<Node>& Node_, std::ostream& OStream) const {
+    void InOrderHelper(const std::unique_ptr<Node> &Node_, std::ostream &OStream) const {
         if(node) {
             InOrderHelper(Node_->Left, OStream);
             OStream << Node->Data_ << " ";
@@ -34,20 +35,55 @@ template<class T> class BinarySearchTree {
         }
     }
 
+    void PreOrderHelper(const std::unique_ptr<Node> &Node_, std::ostream &OStream) const {
+        if(node) {
+            OStream << Node->Data_ << " ";
+            PreOrderHelper(Node_->Left, OStream);
+            PreOrderHelper(Node_->Right, OStream);
+        }
+    }
+
+    void PostOrderHelper(const std::unique_ptr<Node> &Node_, std::ostream &OStream) const {
+        if(node) {
+            PostOrderHelper(Node_->Left, OStream);
+            PostOrderHelper(Node_->Right, OStream);
+            OStream << Node->Data_ << " ";
+        }
+    }
+
+    std::unique_ptr<Node> RemoveHelper(std::unique_ptr<Node> &Node_, const T &Data) {
+        if(!Node_) return nullptr;
+        if(Data < Node_->Data) Node_->Left = RemoveHelper(Node_->Left, Data);
+        else if(Data > Node_->Data) Node_->Right = RemoveHelper(Node_->Right, Data);
+        else {
+            if(!Node_->Left && !Node_->Right) return nullptr;
+            if(!Node_->Left) return std::move(Node_->Right);
+            if(!Node_->Right) return std::move(Node_->Left);
+            auto Successor = Node_->Right.get();
+            while(Successor->Left) Successor = Successor->Left.get();
+            Node_->Data = Successor->Data;
+            Node_->Right = RemoveHelper(Node_->Right, Node_->Data);
+        }
+        return Node_;
+    }
+
+    void ForEachHelper(std::unique_ptr<Node>& Node_, FUNCTION(void(T&, int)) Function, int Index) {
+        if (!Node_) return;
+        Function(Node_->Data, Index++);
+        ForEachHelper(Node_->Left, Function);
+        ForEachHelper(Node_->Right, Function);
+    }
+
 public:
     BinarySearchTree() : Root{nullptr} {}
 
-    void Insert(const T &Data) {
-        InsertHelper(Root, Data);
-    }
+    void Insert(const T &Data) { InsertHelper(Root, Data); }
 
-    bool Search(const T &Data) const noexcept { 
-        return SearchHelper(Root, Data);
-    }
+    std::unique_ptr<Node> Remove(const T &Data) { return RemoveHelper(Root, Data); }
 
-    void InOrderTraversal(std::ostream &OStream) {
-        InOrderHelper(Root, OStream);
-    }
+    bool Search(const T &Data) const noexcept { return SearchHelper(Root, Data); }
+
+    void InOrderTraversal(std::ostream &OStream) { InOrderHelper(Root, OStream); }
 
     const Node* begin() const noexcept {
         if(!Root) return nullptr;
@@ -56,8 +92,11 @@ public:
         return LeftMost;
     }
 
-    const Node* end() const noexcept {
-        return nullptr;
+    const Node* end() const noexcept { return nullptr; }
+
+    void ForEach(FUNCTION(void(T&, int)) Function) {
+        int Index = 0;
+        ForEachHelper(Root, Function, Index);
     }
 };
 }

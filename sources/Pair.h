@@ -1,14 +1,11 @@
 #pragma once
 
 namespace Cxxutil {
-template<typename T1, typename T2>
-class Pair {
-public:
-    using FirstType = T1;
-    using SecondType = T2;
-
+template<class T1, class T2> struct Pair {
     T1 First;
     T2 Second;
+	using first = First;
+	using second = Second;
 
     Pair() : First(), Second() {}
 
@@ -31,25 +28,17 @@ public:
         return First == Other.First && Second == Other.Second;
     }
 
-    bool operator!=(const Pair &Other) const {
-        return !(*this == Other);
-    }
+    bool operator!=(const Pair &Other) const { return !(*this == Other); }
 
     bool operator<(const Pair &Other) const {
         return First < Other.First || (!(Other.First < First) && Second < Other.Second);
     }
 
-    bool operator>(const Pair &Other) const {
-        return Other < *this;
-    }
+    bool operator>(const Pair &Other) const { return Other < *this; }
 
-    bool operator<=(const Pair &Other) const {
-        return !(Other < *this);
-    }
+    bool operator<=(const Pair &Other) const { return !(Other < *this); }
 
-    bool operator>=(const Pair &Other) const {
-        return !(*this < Other);
-    }
+    bool operator>=(const Pair &Other) const { return !(*this < Other); }
 };
 
 template<typename T1, typename T2>

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <Function.h>
-#include <algorithm>
+#include <Cxxutil.h>
 
 namespace Cxxutil {
 template<class T> class Vector {
@@ -9,10 +8,14 @@ template<class T> class Vector {
   	int VectorCapacity;
   	int VectorSize;
 
+    using push_back_t = void (Vector::*)(const T&);
+    using pop_back_t = void (Vector::*)();
+	using clear_t = void (Vector::*)();
+	
   	void Resize() {
-		VectorCapacity = std::max(1, VectorCapacity * 2);
+		VectorCapacity = MAX(1, VectorCapacity * 2);
 		T NewData = new T[VectorCapacity];
-		std::copy(VectorData, VectorData + VectorSize, NewVectorData);
+		COPY(VectorData, VectorData + VectorSize, NewVectorData);
 		delete[] VectorData;
 		VectorData = NewVectorData;
   	}
@@ -27,17 +30,17 @@ public:
 
   	T &operator[](int Index) { return VectorData[Index]; }
 
-  	bool Empty() { return VectorSize == 0; }
-  	bool Full() { return VectorSize == VectorCapacity; }
+  	bool Empty() const { return VectorSize == 0; }
+  	bool Full() const { return VectorSize == VectorCapacity; }
 
-	void ForEach(Function<void(T&, int)> Expression) {
+	void ForEach(FUNCTION<void(T&, int)> Expression) {
 		for(int i = 0; i < VectorSize; i++) Expression(VectorData[i], i);
 	}
 
 	void Swap(Vector &Other) {
-		std::swap(this->VectorSize, Other->VectorSize);
-		std::swap(this->VectorData, Other->VectorData);
-		std::swap(this->VectorCapacity, Other->VectorCapacity);
+		SWAP(this->VectorSize, Other->VectorSize);
+		SWAP(this->VectorData, Other->VectorData);
+		SWAP(this->VectorCapacity, Other->VectorCapacity);
   	}
 
 	void operator=(Vector &Other) { Swap(Other); }
@@ -51,8 +54,8 @@ public:
 	void RemoveByValue(const T &Value) {
 		for(int i = 0; i < VectorSize; i++) {
 			if(VectorData[i] == Value) { 
-				Erase(Value);
-				break;
+				Erase(i);
+				i--;
 			}
 		}
 	}
@@ -65,5 +68,9 @@ public:
 	}
 
 	void Clear() { VectorSize = 0; }
+
+    push_back_t push_back = &Vector::PushBack;
+    pop_back_t pop_back = &Vector::PopBack;
+	clear_t clear = &Vector::Clear;
 };
 }

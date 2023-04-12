@@ -1,20 +1,66 @@
-#include <All.h>
 #include <iostream>
+#include <All.h>
 
 using namespace Cxxutil;
 
-int main(int argc, char **argv) {
-    Array<int, 5> MyArray = {1, 2, 3, 4, 5};
-    std::cout << "Size of array is: " << MyArray.Size();
-    MyArray.ForEach([](int &Item, int Index) {
-        std::cout << "Item: " << Item << " at index: " << Index << '\n';
-    });
-    Vector<int> MyVector;
-    MyVector.PushBack(1);
-    MyVector.PushBack(2);
-    MyVector.PushBack(3);
-    MyVector.ForEach([](int &Item, int Index) {
-        std::cout << "Item: " << Item << " at index: " << Index << '\n';
-    });
-    return 0;
+int main() {
+  // BinarySearchTree example
+  BinarySearchTree<int> bst;
+  bst.Insert(5);
+  bst.Insert(2);
+  bst.Insert(8);
+  bst.Insert(1);
+  bst.Insert(4);
+  bst.Insert(7);
+  bst.Insert(9);
+
+  std::cout << "Binary Search Tree:\n";
+  bst.ForEach([](int& value, int index) {
+    std::cout << index << ": " << value << '\n';
+  });
+
+  std::cout << "Inorder traversal:\n";
+  bst.InOrderTraversal(std::cout);
+  std::cout << "\n";
+
+  std::cout << "Preorder traversal:\n";
+  bst.PreOrderTraversal(std::cout);
+  std::cout << "\n";
+
+  std::cout << "Postorder traversal:\n";
+  bst.PostOrderTraversal(std::cout);
+  std::cout << "\n";
+
+  std::cout << "Searching for value 7: " << std::boolalpha << bst.Search(7) << '\n';
+  std::cout << "Searching for value 3: " << std::boolalpha << bst.Search(3) << '\n';
+
+  bst.Remove(2);
+  std::cout << "After removing value 2:\n";
+  bst.ForEach([](int& value, int index) {
+    std::cout << index << ": " << value << '\n';
+  });
+
+  // LinkedList example
+  LinkedList<int> ll;
+  ll.Append(1);
+  ll.Append(2);
+  ll.Append(3);
+  ll.Append(4);
+  ll.Append(5);
+
+  // Queue example
+  Queue<int> queue;
+  queue.Enqueue(1);
+  queue.Enqueue(2);
+  queue.Enqueue(3);
+  queue.Enqueue(4);
+  queue.Enqueue(5);
+
+  std::cout << "Queue:\n";
+  while(!queue.IsEmpty()) {
+    std::cout << queue.Front() << '\n';
+    queue.Dequeue();
+  }
+
+  return 0;
 }
