@@ -8,7 +8,7 @@
 #include <functional>
 #include <cstring>
 #include <algorithm>
-#include <hashmap>
+#include <unordered_map>
 
 namespace Cxxutil {
 
@@ -21,9 +21,21 @@ namespace Cxxutil {
 #endif
 
 #ifdef USE_STD
+	#define STRING_(x) std::string(x)
+#else
+	#define STRING_(x) String(x)
+#endif
+
+#ifdef USE_STD
     #define STRINGVIEW std::string_view
 #else
     #define STRINGVIEW StringView
+#endif
+
+#ifdef USE_STD
+    #define STRINGVIEW_(x) std::string_view(x)
+#else
+    #define STRINGVIEW_(x) StringView(x)
 #endif
 
 #ifdef USE_STD

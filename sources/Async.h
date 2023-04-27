@@ -14,9 +14,7 @@ template<class T> class Async {
 public:
 	Async(FUNCTION(T()) Function) : Function(Function) {}
 
-	Future<T> GetFuture() {
-		return Future<T>(this);
-	}
+	Future<T> GetFuture() { return Future<T>(this); }
 
 	void Execute() {
 		try {
@@ -37,9 +35,7 @@ public:
 		return Result;
 	}
 
-	std::exception_ptr GetExceptionPointer() const {
-		return ExceptionPointer;
-	}
+	std::exception_ptr GetExceptionPointer() const { return ExceptionPointer; }
 };
 
 template<class T> class Future {
@@ -56,7 +52,7 @@ public:
 		return Async_->Get();
 	}
 
-	std::exception_ptr GetExceptionPointer() const {
+	EXCEPTION_PTR GetExceptionPointer() const {
 		if(!Async_) throw std::runtime_error("Future not associated with any asynchronous operation.");
 		return Async_->GetExceptionPointer();
 	}

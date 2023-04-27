@@ -25,6 +25,7 @@ public:
   	~Vector() { delete[] VectorData; }
 
   	int Size() { return VectorSize; }
+	int size() { return Size(); }
 	int Capacity() { return VectorCapacity }
 	T Data() { return VectorData; }
 

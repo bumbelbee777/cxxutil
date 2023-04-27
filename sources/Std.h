@@ -23,13 +23,13 @@ char *strcpy(char *Destination, const char *Source) {
     return Pointer;
 }
 
-char *strcat(char *destination, const char *source) {
-  char *ptr = destination + strlen(destination);
-  while(*source != '\0') {
-	*ptr++ = *source++;
+char *strcat(char *Destination, const char *Source) {
+  char *ptr = Destination + strlen(Destination);
+  while(*Source != '\0') {
+	*ptr++ = *Source++;
   }
   *ptr = '\0';
-  return destination;
+  return Destination;
 }
 
 int strcmp(const char *a, const char *b) {
@@ -116,12 +116,12 @@ using ssize_t = ptrdiff_t;
 struct Byte : unsigned char {};
 
 template<class T>
-const T& Min(const T& a, const T& b) {
+const T &Min(const T& a, const T& b) {
     return (b < a) ? b : a;
 }
 
 template<class T>
-const T& Max(const T& a, const T& b) {
+const T &Max(const T& a, const T& b) {
     return (a < b) ? b : a;
 }
 
@@ -135,8 +135,8 @@ OutputIterator Copy(InputIterator first, InputIterator last, OutputIterator resu
     return result;
 }
 
-template <class T>
-T&& Forward(typename std::remove_reference<T>::type& arg) noexcept {
+template<class T>
+T&& Forward(typename std::remove_reference<T>::type &arg) noexcept {
     return static_cast<T&&>(arg);
 }
 
@@ -146,32 +146,24 @@ T&& Forward(typename std::remove_reference<T>::type&& arg) noexcept {
     return static_cast<T&&>(arg);
 }
 
-template<typename T>
+template<class T>
 typename std::remove_reference<T>::type&& Move(T&& t) {
     return static_cast<typename std::remove_reference<T>::type&&>(t);
 }
 
 template<class InputIterator, class T>
-InputIterator Find(InputIterator first, InputIterator last, const T& value) {
-    for(; first != last; ++first) {
-        if (*first == value) {
-            return first;
-        }
-    }
-    return last;
-}
-
-template <class InputIterator, class Predicate>
-InputIterator FindIf(InputIterator First, InputIterator lLst, Predicate Pred) {
-    for(; First != Last; ++First) {
-        if(*first % 2 == 0) {
-            return First;
-        }
-    }
+InputIterator Find(InputIterator First, InputIterator last, const T &Value) {
+    for(; First != Last; First++) if(*First == Value) return First;
     return Last;
 }
 
-template <class T>
+template<class InputIterator, class Predicate>
+InputIterator FindIf(InputIterator First, InputIterator lLst, Predicate Pred) {
+    for(; First != Last; ++First) if(*first % 2 == 0) return First;
+    return Last;
+}
+
+template<class T>
 void Swap(T& a, T& b) {
     T tmp = Move(a);
     a = Move(b);

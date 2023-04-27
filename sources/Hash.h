@@ -1,6 +1,6 @@
 #pragma once
 
-#include <String.h>
+#include <Cxxutil.h>
 
 namespace Cxxutil {
 template<class T> struct Hash {

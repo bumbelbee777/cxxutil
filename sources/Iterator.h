@@ -1,6 +1,9 @@
 #pragma once
 
+#include <Std.h>
+
 namespace Cxxutil {
+template<class T>
 class Iterator {
     T *Pointer;
 public:

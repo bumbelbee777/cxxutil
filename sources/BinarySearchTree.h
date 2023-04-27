@@ -98,5 +98,11 @@ public:
         int Index = 0;
         ForEachHelper(Root, Function, Index);
     }
+
+	void PreOrderTraversal(const T &Data) {
+		PreOrderTraversalHelper(Root);
+	}
+
+	void PostOrderTraversal() {}
 };
 }

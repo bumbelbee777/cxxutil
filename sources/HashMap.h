@@ -7,10 +7,10 @@ template<class Key, class Value> class HashMap {
 public:
     using key_type = Key;
     using mapped_type = Value;
-    using value_type = PAIR<Key, Value>;
+    using PAIR<Key, Value> = PAIR<Key, Value>;
 
 private:
-    VECTOR<value_type> Data;
+    VECTOR<PAIR<Key, Value>> Data;
     FUNCTION<size_t(const Key&)> Hasher;
 
 public:
@@ -20,7 +20,7 @@ public:
     HashMap(const HashMap&) = delete;
     HashMap &operator=(const HashMap&) = delete;
 
-    void Insert(const value_type& Value) {
+    void Insert(const PAIR<Key, Value>& Value) {
         size_t Index = FindIndex(Value.First);
         if (Index == Data.size()) {
             Resize(Data.size() * 2);
@@ -29,21 +29,19 @@ public:
         Data[Index] = Value;
     }
 
-    bool Contains(const key_type& Key) const {
+    bool Contains(const Key &Key) const {
         return FindIndex(Key) != Data.size();
     }
 
-    const Value &operator[](const key_type& Key) const {
+    const Value &operator[](const Key &Key) const {
         size_t Index = FindIndex(Key);
-        if (Index == Data.size()) {
-            throw std::out_of_range("Key not found");
-        }
+        if (Index == Data.size()) return NULL;
         return Data[Index].second;
     }
 
-    Value &operator[](const key_type& Key) {
+    Value &operator[](const Key &Key) {
         size_t Index = FindIndex(Key);
-        if (Index == Data.size()) {
+        if(Index == Data.size()) {
             Resize(Data.size() * 2);
             Index = FindIndex(Key);
         }
@@ -56,17 +54,17 @@ public:
     }
 
 private:
-    size_t FindIndex(const key_type& Key) const {
+    size_t FindIndex(const Key &Key) const {
         size_t Hash = Hasher(Key);
         size_t Index = Hash % Data.size();
-        while(Data[Index].First != Key && Data[Index].First != key_type()) Index = (Index + 1) % Data.size();
+        while(Data[Index].First != Key && Data[Index].First != Key()) Index = (Index + 1) % Data.size();
         return Index;
     }
 
     void Resize(size_t NewSize) {
-        Vector<value_type> NewData(NewSize);
-        for(const auto& Value : Data) {
-            if(Value.First != key_type()) {
+        Vector<PAIR<Key, Value>> NewData(NewSize);
+        for(const auto &Value : Data) {
+            if(Value.First != Key()) {
                 size_t Index = FindIndex(Value.first);
                 NewData[Index] = Value;
             }

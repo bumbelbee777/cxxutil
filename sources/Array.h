@@ -1,7 +1,8 @@
 #pragma once
 
-#include <Cxxutil.h
+#include <Cxxutil.h>
 #include <Function.h>
+#include <random>
 
 namespace Cxxutil {
 template<class T, std::size_t size>
@@ -11,17 +12,13 @@ public:
     Array() { MEMSET(Data_, 0, size * sizeof(T)); }
     ~Array() {}
 
-    T &operator[](size_t Index) {
-        if (Index >= size) {
-            throw std::out_of_range("Array index out of range");
-        }
+    T &operator[](const size_t Index) {
+        if (Index >= size) return NULL;
         return Data_[Index];
     }
 
-    const T &operator[](size_t Index) const {
-        if (Index >= size) {
-            throw std::out_of_range("Array index out of range");
-        }
+    const T &operator[](const size_t Index) const {
+        if (Index >= size) return NULL;
         return Data_[Index];
     }
 
@@ -56,8 +53,16 @@ public:
         return &Data_[size];
     }
 
-    void ForEach(FUNCTION<void(T&, int)> Expression) {
-        for(int i = 0; i < size; i++) Expression(Data_[i], i);
-    }
+	void Shuffle() {
+    	std::random_device rd;
+    	std::mt19937 gen(rd());
+    	for(int i = size - 1; i > 0; i--) {
+        	std::uniform_int_distribution<int> dist(0, i);
+        	int j = dist(gen);
+        	SWAP(Data_[i], Data_[j]);
+    	}
+	}
+
+    void ForEach(FUNCTION<void(T&, int)> Expression) { for(int i = 0; i < size; i++) Expression(Data_[i], i); }
 };
 }
