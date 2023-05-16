@@ -1,6 +1,8 @@
 #pragma once
 
-#include <Cxxutil.h>
+#include <Vector.h>
+#include <Pair.h>
+#include <Utility.h>
 
 namespace Cxxutil {
 template<class Key, class Value> class HashMap {
@@ -10,8 +12,8 @@ public:
     using PAIR<Key, Value> = PAIR<Key, Value>;
 
 private:
-    VECTOR<PAIR<Key, Value>> Data;
-    FUNCTION<size_t(const Key&)> Hasher;
+    Vector<Pair<Key, Value>> Data;
+    Function<size_t(const Key&)> Hasher;
 
 public:
     explicit HashMap(size_t InitialSize = 8)
@@ -20,7 +22,7 @@ public:
     HashMap(const HashMap&) = delete;
     HashMap &operator=(const HashMap&) = delete;
 
-    void Insert(const PAIR<Key, Value>& Value) {
+    void Insert(const Pair<Key, Value>& Value) {
         size_t Index = FindIndex(Value.First);
         if (Index == Data.size()) {
             Resize(Data.size() * 2);
@@ -61,15 +63,15 @@ private:
         return Index;
     }
 
-    void Resize(size_t NewSize) {
-        Vector<PAIR<Key, Value>> NewData(NewSize);
+    void Resize(const size_t NewSize) {
+        Vector<Pair<Key, Value>> NewData(NewSize);
         for(const auto &Value : Data) {
             if(Value.First != Key()) {
                 size_t Index = FindIndex(Value.first);
                 NewData[Index] = Value;
             }
         }
-        Data = MOVE(NewData);
+        Data = Move(NewData);
     }
 };
 }

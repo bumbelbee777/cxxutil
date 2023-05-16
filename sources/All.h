@@ -2,6 +2,12 @@
 
 #include <Array.h>
 #include <Async.h>
+#include <Atomic.h>
+#include <BinarySearchTree.h>
+#include <Box.h>
+#include <Compare.h>
+#include <CTypes.h>
+#include <Format.h>
 #include <Function.h>
 #include <Graph.h>
 #include <Hash.h>
@@ -17,9 +23,13 @@
 #include <Result.h>
 #include <Regex.h>
 #include <Result.h>
+#include <SharedPointer.h>
 #include <Slice.h>
 #include <Stack.h>
 #include <String.h>
 #include <StringView.h>
 #include <Strong.h>
+#include <TypeInfo.h>
 #include <UniquePointer.h>
+#include <Utility.h>
+#include <Vector.h>

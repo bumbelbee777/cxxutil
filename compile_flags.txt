@@ -1,2 +1,5 @@
 -Isources/
 -std=c++20
+-march=native
+-O2
+-mtune=native

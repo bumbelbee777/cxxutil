@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Cxxutil.h>
+#include <Utility.h>
+#include <Function.h>
 
 namespace Cxxutil {
 template<class T> class Vector {
@@ -13,13 +14,12 @@ template<class T> class Vector {
 	using clear_t = void (Vector::*)();
 	
   	void Resize() {
-		VectorCapacity = MAX(1, VectorCapacity * 2);
+		VectorCapacity = Max(1, VectorCapacity * 2);
 		T NewData = new T[VectorCapacity];
-		COPY(VectorData, VectorData + VectorSize, NewVectorData);
+		Copy(VectorData, VectorData + VectorSize, NewData);
 		delete[] VectorData;
-		VectorData = NewVectorData;
+		VectorData = NewData;
   	}
-
 public:
   	Vector() : VectorData(nullptr), VectorSize(0), VectorCapacity(0) {}
   	~Vector() { delete[] VectorData; }
@@ -29,19 +29,19 @@ public:
 	int Capacity() { return VectorCapacity }
 	T Data() { return VectorData; }
 
-  	T &operator[](int Index) { return VectorData[Index]; }
+  	T &operator[](const int Index) const { return VectorData[Index]; }
 
   	bool Empty() const { return VectorSize == 0; }
   	bool Full() const { return VectorSize == VectorCapacity; }
 
-	void ForEach(FUNCTION<void(T&, int)> Expression) {
+	void ForEach(Function<void(T&, int)> Expression) {
 		for(int i = 0; i < VectorSize; i++) Expression(VectorData[i], i);
 	}
 
 	void Swap(Vector &Other) {
-		SWAP(this->VectorSize, Other->VectorSize);
-		SWAP(this->VectorData, Other->VectorData);
-		SWAP(this->VectorCapacity, Other->VectorCapacity);
+		Swap(this->VectorSize, Other->VectorSize);
+		Swap(this->VectorData, Other->VectorData);
+		Swap(this->VectorCapacity, Other->VectorCapacity);
   	}
 
 	void operator=(Vector &Other) { Swap(Other); }
@@ -62,13 +62,16 @@ public:
 	}
 	void Erase(const int Index) { 
 		if(Index < 0 || Index >= VectorSize) return;
-		for(int i = Index; i < VectorSize - 1; i++) {
-			VectorData[i] = VectorData[i + 1];
-		}
+		for(int i = Index; i < VectorSize - 1; i++) VectorData[i] = VectorData[i + 1];
 		VectorSize--;
 	}
 
 	void Clear() { VectorSize = 0; }
+
+	T& Front() { return VectorData[0]; }
+	const T& Front() const { return VectorData[0]; }
+	T& Back() { return VectorData[VectorSize - 1]; }
+	const T& Back() const { return VectorData[VectorSize - 1]; }
 
     push_back_t push_back = &Vector::PushBack;
     pop_back_t pop_back = &Vector::PopBack;

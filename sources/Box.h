@@ -3,7 +3,7 @@
 namespace Cxxutil {
 
 template<class T> class Box {
-    T* Data;
+    T *Data;
 
 public:
     Box() : Data(nullptr) {}

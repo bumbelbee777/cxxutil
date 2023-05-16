@@ -3,7 +3,7 @@
 
 using namespace Cxxutil;
 
-int main(int argv, char **argv) {
+int main(int argc, char **argv) {
   	BinarySearchTree<int> bst;
   	bst.Insert(5);
   	bst.Insert(2);
@@ -14,20 +14,20 @@ int main(int argv, char **argv) {
   	bst.Insert(9);
 
   	std::cout << "Binary Search Tree:\n";
-  	bst.ForEach([](int& value, int index) {
+  	bst.ForEach([](int &value, int index) {
     	std::cout << index << ": " << value << '\n';
   	});
 
   	std::cout << "Inorder traversal:\n";
-  	bst.InOrderTraversal(std::cout);
+  	auto Result = bst.InOrderTraversal();
   	std::cout << "\n";
 
   	std::cout << "Preorder traversal:\n";
-  	bst.PreOrderTraversal(std::cout);
+  	auto Result = bst.PreOrderTraversal();
   	std::cout << "\n";
 
   	std::cout << "Postorder traversal:\n";
-  	bst.PostOrderTraversal(std::cout);
+  	auto Result = bst.PostOrderTraversal();
   	std::cout << "\n";
 
   	std::cout << "Searching for value 7: " << std::boolalpha << bst.Search(7) << '\n';
@@ -39,13 +39,13 @@ int main(int argv, char **argv) {
     	std::cout << index << ": " << value << '\n';
   	});
 
-
   	LinkedList<int> ll;
   	ll.Append(1);
   	ll.Append(2);
   	ll.Append(3);
   	ll.Append(4);
   	ll.Append(5);
+	std::cout << "4th item in linked list using [] operator: " << ll[4] << '\n';
 
     Queue<int> queue;
     queue.Enqueue(1);
@@ -55,9 +55,9 @@ int main(int argv, char **argv) {
     queue.Enqueue(5);
 
     std::cout << "Queue:\n";
-    while(!queue.IsEmpty()) {
-      std::cout << queue.Front() << '\n';
-      queue.Dequeue();
-    }
-  return 0;
+	queue.ForEach([](int &Item, int Index) {
+		std::cout << "Item: " << Item << '\n';
+		queue.Dequeue();
+	});
+  	return 0;
 }

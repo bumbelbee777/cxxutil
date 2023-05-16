@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Cxxutil.h>
+#include <TypeInfo.h>
 
 namespace Cxxutil {
 template<class T> class Optional {
@@ -11,7 +11,7 @@ public:
         if(HasValue_) new(&Value_) T(Other.Value_);
     }
     Optional(Optional &&Other) : HasValue_(Other.HasValue_) {
-        if(HasValue_) new(&Value_) T(MOVE(Other.Value_));
+        if(HasValue_) new(&Value_) T(Move(Other.Value_));
         Other.Reset();
     }
     ~Optional() { Reset(); }

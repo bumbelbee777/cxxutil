@@ -1,68 +1,48 @@
 #pragma once
 
-#include <Cxxutil.h>
-#include <stdexcept>
-#include <thread>
+#include <Function.h>
 
 namespace Cxxutil {
 template<class T> class Future;
 
 template<class T> class Async {
-	std::exception_ptr ExceptionPointer;
-	T Result;
-	bool IsReady = false;
+	T Result_;
+	bool IsReady_ = false;
+	Function<T()> Function_;
 public:
-	Async(FUNCTION(T()) Function) : Function(Function) {}
+	Async(Function<T()> Function) : Function_(Function) {}
 
 	Future<T> GetFuture() { return Future<T>(this); }
 
 	void Execute() {
-		try {
-			Result = Function;
-			IsReady = true;
-		} catch(...) {
-			ExceptionPointer = std::current_exception();
-		}
+		Result_ = function_();
+		IsReady_ = true;
 	}
 
-	bool Ready() const {
-		return IsReady;
-	}
+	bool Ready() const { return IsReady_; }
 
-	T Get() const {
-		if(!IsReady) throw std::runtime_error("Result not ready.");
-		if(ExceptionPointer) std::rethrow_exception(ExceptionPointer);
-		return Result;
-	}
-
-	std::exception_ptr GetExceptionPointer() const { return ExceptionPointer; }
+	T Result() const { return Result_; }
 };
 
 template<class T> class Future {
-	Async<T> *Async_;
-	bool IsReady = false;
+	Async<T> *async_;
+	bool IsReady_ = false;
+
 public:
-	Future() : Async(nullptr) {}
-	Future(Async<T> *Async_) Async_(Async_) {}
+	Future() : async_(nullptr) {}
+	Future(Async<T> *async) : async_(async) {}
 
-	bool Ready() const { return IsReady; }
+	bool Ready() const { return IsReady_; }
 
-	T Get() const {
-		if(!Async_) throw std::runtime_error("Future not associated with any asynchronous operation.");
-		return Async_->Get();
-	}
-
-	EXCEPTION_PTR GetExceptionPointer() const {
-		if(!Async_) throw std::runtime_error("Future not associated with any asynchronous operation.");
-		return Async_->GetExceptionPointer();
+	T Result() const {
+		static_assert(async_, "Future<T> not associated with any asynchronous operation.");
+		return async_->Result();
 	}
 };
 
-template<typename T>
-Future<T> AsyncExecute(FUNCTION(T) Function) {
-	Async<T> Async_(Function);
-	std::thread Thread(&Async<T>::Execute, &Async_);
-	Thread.detach();
-	return Async.GetFuture();
+template<class T> Future<T> AsyncExecute(Function<T()> Function_) {
+	Async<T> Async(Function_);
+	Async.Execute();
+	return Async.Future();
 }
 }

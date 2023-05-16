@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Cxxutil.h>
+#include <String.h>
 
 namespace Cxxutil {
 template<class T> struct Hash {
@@ -16,12 +16,10 @@ template<class T> struct Hash {
 	}
 };
 
-template<> struct Hash<STRING> {
-	size_t operator()(const STRING &String) const {
+template<> struct Hash<String> {
+	size_t operator()(const String &String_) const {
 		size_t Hash = 5381;
-		for(char Character : String) {
-			Hash = ((Hash << 5) + Hash) + Character;
-		}
+		for(char Character : String_) Hash = ((Hash << 5) + Hash) + Character;
 		return Hash;
 	}
 };

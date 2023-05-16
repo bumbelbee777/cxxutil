@@ -10,7 +10,7 @@ public:
 
     ~Function() { this->clear(); }
 
-    void clear() {
+    void Clear() {
         if(this->callable_ == nullptr) return;
         delete this->callable_;
     }
@@ -24,7 +24,7 @@ public:
 
     ReturnValue operator()(Arguments... args) const {
         if(this->callable_ == nullptr) return ReturnValue();
-        return this->callable_->invoke(args...);
+        return this->callable_->Invoke(args...);
     }
 
     bool operator==(bool Set) { return (this->callable_ != nullptr) == Set; }
@@ -42,7 +42,7 @@ private:
         CallableFunction(func t) : t_(t) {}
         ~CallableFunction() override = default;
 
-        ReturnValue invoke(Arguments... args) override { return t_(args...); }
+        ReturnValue Invoke(Arguments... args) override { return t_(args...); }
     private:
         func t_;
     };

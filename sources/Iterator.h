@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Std.h>
+#include <CTypes.h>
 
 namespace Cxxutil {
 template<class T>
@@ -36,11 +36,11 @@ public:
         return Pointer;
     }
 
-    bool operator==(const Iterator& Other) const {
+    bool operator==(const Iterator &Other) const {
         return Pointer == Other.Pointer;
     }
-    bool operator!=(const Iterator& Other) const {
-        return !(*this == Other);
+    bool operator!=(const Iterator &Other) const {
+        return *this != Other;
     }
 
     friend Iterator &operator+=(ptrdiff_t n) {

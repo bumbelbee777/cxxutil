@@ -1,46 +1,31 @@
 #pragma once
 
-#include <Cxxutil.h>
+#include <Utility.h>
 
 namespace Cxxutil {
 template<class T = void> class HeapAllocator {
 public:
-	HeapAllocator(size_t Size = 4096) : Size(Size), Memory(new std::byte[Size]), Offset(0) {
+	HeapAllocator(size_t Size = 4096) : Size(Size), Memory(new Byte[Size]), Offset(0), FreeList(nullptr) {
 		AddBlock(Memory, Size);
 	}
 
 	~HeapAllocator() {
-		std::byte *Block = FreeList;
+		Byte *Block = FreeList;
 		while(Block) {
-			std::byte *NextBlock = *reinterpret_cast<std::byte**>(Block);
+			Byte *NextBlock = *reinterpret_cast<Byte**>(Block);
 			delete[] Block;
 			Block = NextBlock;
 		}
+		delete[] Memory;
 	}
 
 	T *Allocate(size_t Count = 1) {
 		size_t Bytes = Count * sizeof(T);
-		std::byte *Result = nullptr;
-		if(Bytes <= BlockSize) {
-			if(static_cast<size_t>(Offset + Bytes) <=
-			    static_cast<size_t>(BlockEnd - Memory)) {
-				Result = Memory + Offset;
-				Offset += Bytes;
-			} else {
-				if(FreeList) {
-					Result = FreeList;
-					FreeList = *reinterpret_cast<std::byte**>(FreeList);
-				}
-			}
-		}
-		if(!Result) {
-			if(Bytes > BigAllocationThreshold) return BigAllocate(Count);
-			size_t NewBlockSize = 	MAX(Bytes, BlockSize);
-			std::byte *NewBlock = new std::byte[NewBlockSize];
-			AddBlock(NewBlock, NewBlockSize);
-			Result = NewBlock;
-		}
-		return reinterpret_cast<T*>(Result);
+		if(Bytes <= SmallThreshold) {
+			return SmallAllocate(Bytes);
+		} else if(Bytes <= MediumThreshold) {
+			return MediumAllocate(Bytes);
+		} else return BigAllocate(Bytes);
 	}
 
 	T *AllocateZeroed(size_t Count = 1) {
@@ -50,40 +35,79 @@ public:
 	}
 
 	void Free(T *Pointer) {
-		if(Pointer == nullptr) return;
-		std::byte *Block = reinterpret_cast<std::byte*>(Pointer);
+		if(!Pointer) return;
+		Byte *Block = reinterpret_cast<Byte*>(Pointer);
 		if(Block >= Memory && Block < Memory + Size) {
 			Offset = Block - Memory;
-		} else {
-			*reinterpret_cast<std::byte**>(Block) = FreeList;
-			FreeList = Block;
-		}
+		} else FreeFromList(Block);
 	}
 
 private:
+	static const size_t SmallThreshold = 256;
+	static const size_t MediumThreshold = 65536;
 	static constexpr size_t BlockSize = 4096;
-	static constexpr size_t BigAllocationThreshold = 1048576;
+	static constexpr size_t BigThreshold = 1048576;
 
 	size_t Size;
-	std::byte *Memory;
+	Byte* Memory;
 	size_t Offset;
+	Byte* FreeList;
 
-	std::byte *BlockEnd;
-	std::byte *FreeList;
+	Byte *BlockEnd;
+	Byte *SmallFreeList;
+	Byte *MediumFreeList;
 
-	void AddBlock(std::byte *Block, size_t Size) {
-		*reinterpret_cast<std::byte**>(Block) = FreeList;
-		FreeList = Block;
-		BlockEnd = Block + Size;
+	T *SmallAllocate(size_t Bytes) {
+		if(SmallFreeList) {
+			Byte *Result = SmallFreeList;
+			SmallFreeList = *reinterpret_cast<Byte**>(SmallFreeList);
+			return reinterpret_cast<T*>(Result);
+		}
+		if(static_cast<size_t>(Offset + Bytes) <= static_cast<size_t>(BlockEnd - Memory)) {
+			Byte* Result = Memory + Offset;
+			Offset += Bytes;
+			return reinterpret_cast<T*>(Result);
+		}
+		return BigAllocate(Bytes);
 	}
 
-	T *BigAllocate(size_t Count) {
-		size_t Bytes = Count * sizeof(T);
-		size_t NewBlockSize = MAX(Bytes, BlockSize);
-		std::byte* NewBlock = new std::byte[NewBlockSize];
-		*reinterpret_cast<std::byte**>(NewBlock) = FreeList;
-		FreeList = NewBlock;
-		return reinterpret_cast<T*>(NewBlock);
+	T *MediumAllocate(size_t Bytes) {
+		if(MediumFreeList) {
+			Byte *Result = MediumFreeList;
+			MediumFreeList = *reinterpret_cast<Byte**>(MediumFreeList);
+			return reinterpret_cast<T*>(Result);
+		}
+		if(static_cast<size_t>(Offset + Bytes) <= static_cast<size_t>(BlockEnd - Memory)) {
+			Byte* Result = Memory + Offset;
+			Offset += Bytes;
+			return reinterpret_cast<T*>(Result);
+		}
+		return BigAllocate(Bytes);
+	}
+
+	T *BigAllocate(size_t Bytes) {
+		if(Bytes > BigThreshold) return reinterpret_cast<T*>(new Byte[Bytes]);
+		if(Byte *Block = reinterpret_cast<Byte*>(FreeList)) {
+			FreeList = *reinterpret_cast<Byte**>(Block);
+			return reinterpret_cast<T*>(Block);
+		}
+		if(Offset + Bytes > Size) AddBlock(new Byte[BlockSize], BlockSize);
+		Byte *Result = Memory + Offset;
+		Offset += Bytes;
+		return reinterpret_cast<T*>(Result);
+	}
+	
+	void AddBlock(Byte *Block, size_t BlockSize) {
+		*reinterpret_cast<Byte**>(Block) = FreeList;
+		FreeList = Block;
+		BlockEnd = Block + BlockSize;
+	}
+
+	void FreeFromList(Byte *Block) {
+		if(!Block) return;
+		if(Block >= Memory && Block < Memory + Size) return;
+		*reinterpret_cast<Byte**>(Block) = FreeList;
+		FreeList = Block;
 	}
 };
 

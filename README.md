@@ -3,21 +3,25 @@
 A lightweight and freestanding C++20 library implementing various STL containers, allocators and other data structures such as:
 - Vectors (`Vector<T>`).
 - Arrays (`Array<T>`).
+- Stacks (`Stack<T>`).
+- Linked lists (`LinkedList<T>`).
 - Binary search tree (`BinarySearchTree<T>`).
 - Functions (`Function<T>`).
 - Random access iterator (`Iterator<T>`).
 - Optional types (`Optional<T>`).
-- Mutable and non-mutable strings (`String<T>` and `StringView<T>`).
+- Mutable and non-mutable strings (`String<T>` and `StringView<T>` respectively).
 - Queues (`Queue<T>`).
 - Heap allocator (`HeapAllocator<T>`).
 - Exceptions (`Exception`, `ExceptionPointer`).
-- Smart pointers like boxes (`Box<T>`).
-- Maps and hashmaps (`Map<T>` and `Hashmap<T>` respectively).
+- Smart pointers like boxes, unique and shared pointers (`Box<T>`, `UniquePointer<T>` and `SharedPointer<T>` respectively).
+- Maps and hashmaps (`Map<T, U>` and `Hashmap<T, U>` respectively).
 - Regular expressions (`Regex`).
 - Slices, both mutable and immutable (`Slice<T>` and `ConstSlice<T>` respectively).
 - Graphs (`Graph<T>`).
 - Spinlocks and mutexes (`Spinlock` and `Mutex<T>` respectively).
 - FNV-1a algorithm and djb2 hashing algorithm for strings (`Hash<T>` and `Hash<String>` respectively).
+- Pairs and tuples (`Pair<T, U>` and `Tuple<T...>` respectively).
+- C++20 string formatting and three-way comparison support.
 
 And more!
 
@@ -43,7 +47,7 @@ int main(int argv, char **argv) {
 
   	std::cout << "Binary Search Tree:\n";
   	bst.ForEach([](int& value, int index) {
-    	std::cout << index << ": " << value << '\n';
+    	    std::cout << index << ": " << value << '\n';
   	});
 
   	std::cout << "Inorder traversal:\n";
@@ -64,9 +68,8 @@ int main(int argv, char **argv) {
   	bst.Remove(2);
   	std::cout << "After removing value 2:\n";
   	bst.ForEach([](int& Value, int Index) {
-    	std::cout << index << ": " << value << '\n';
+    	    std::cout << index << ": " << value << '\n';
   	});
-
 
   	LinkedList<int> ll;
   	ll.Append(1);
@@ -75,18 +78,18 @@ int main(int argv, char **argv) {
   	ll.Append(4);
   	ll.Append(5);
 
-    Queue<int> queue;
-    queue.Enqueue(1);
-    queue.Enqueue(2);
-    queue.Enqueue(3);
-    queue.Enqueue(4);
-    queue.Enqueue(5);
+        Queue<int> queue;
+        queue.Enqueue(1);
+        queue.Enqueue(2);
+        queue.Enqueue(3);
+        queue.Enqueue(4);
+        queue.Enqueue(5);
 
-    std::cout << "Queue:\n";
-    while(!queue.IsEmpty()) {
-      std::cout << queue.Front() << '\n';
-      queue.Dequeue();
-    }
+        std::cout << "Queue:\n";
+        while(!queue.IsEmpty()) {
+            std::cout << queue.Front() << '\n';
+            queue.Dequeue();
+        }
 
 	Stack<int> MyStack;
 	Stack.Push(1);
