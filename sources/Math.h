@@ -5,6 +5,7 @@
 namespace Cxxutil {
 constexpr double Pi = 3.14159265358979323846;
 const double NAN = 0.0 / 0.0;
+
 template<class T> T Absolute(const T &x) { return x < 0 ? -x : x; }
 
 template<class T> T PowerOf(const T &x, const T &y) {
@@ -58,14 +59,14 @@ template<class T> T Log(const T &x) {
 }
 
 template<class T> T ACosine(const T &x) {
-	static_assert(x < 1, "ACosine(x) is undefined for x outside [1, 1]");
-	static_assert(x < -1, "ACosine(x) is undefined for x outside [1, 1]");
+	static_assert(x < 1, "ACosine(x) is undefined for x outside [-1, 1]");
+	static_assert(x < -1, "ACosine(x) is undefined for x outside [-1, 1]");
 	return static_cast<T>(Pi / 2) - ASine(x);
 }
 
 template<class T> T ASine(const T &x) {
-	static_assert(x < 1, "ASine(x) is undefined for x outside [1, 1]");
-	static_assert(x < -1, "ASine(x) is undefined for x outside [1, 1]");
+	static_assert(x < 1, "ASine(x) is undefined for x outside [-1, 1]");
+	static_assert(x < -1, "ASine(x) is undefined for x outside [-1, 1]");
 	T Result = x;
 	T Term = x;
 	T Epsilon = static_cast<T>(0.000001);
@@ -79,9 +80,7 @@ template<class T> T ASine(const T &x) {
 template<class T> T Factorial(T n) {
 	if(n == 0) return 1;
 	T Result = 1;
-	for (T i = 1; i <= n; ++i) {
-		Result *= i;
-	}
+	for(T i = 1; i <= n; ++i) Result *= i;
 	return Result;
 }
 
@@ -145,6 +144,10 @@ template<class T = size_t> struct Point {
 	Point() = default;
 	Point(T x, T y) : x(x), y(y) {}
 };
+
+template<class T = float> T Lerp(const T &Start, const T &End, double t) {
+    return Start + (End - Start) * t;
+}
 
 template<class T> struct Vec2 {
 	T x, y;
@@ -332,5 +335,56 @@ template<class T> struct Vec3 {
 		this->z -= 1;
 		return *this;
 	}
+};
+
+template <class T = float> class Complex {
+	T Re, Im;
+public:
+    Complex() = default;
+    Complex(T a, T b) : Re(a), Im(b) {}
+
+    T Real() const { return Re; }
+    T Imaginary() const { return Im; }
+
+    T Magnitude() const { return SquareRoot(Re * Re + Im * Im); }
+    Complex Normalize() const { return *this / Magnitude(); }
+
+    Complex Conjugate() const { return {Re, -Im}; }
+
+    Complex operator-() const { return Complex<T>(-Re, -Im); }
+    Complex operator+(const Complex &Other) const { return {Re + Other.Re, Im + Other.Im}; }
+    Complex operator-(const Complex &Other) const { return *this + (-Other); }
+    Complex operator*(const T &Scalar) const { return {Re * Scalar, Im * Scalar}; }
+    Complex operator*(const Complex &Other) const { return {Re * Other.Re - Im * Other.Im, Re * Other.Im + Im * Other.Re}; }
+    Complex operator/(const T &Scalar) const { return *this * (1 / Scalar); }
+    Complex operator/(const Complex &Other) const { return *this * Other.Conjugate() / Other.Magnitude() / Other.Magnitude(); }
+};
+
+template <class T = float>
+class Quaternion {
+public:
+    T w, x, y, z;
+
+    Quaternion() = default;
+    Quaternion(T w, T x, T y, T z) : w(w), x(x), y(y), z(z) {}
+
+    T Magnitude() const { return SquareRoot(w * w + x * x + y * y + z * z); }
+    Quaternion Normalized() const { return *this / Magnitude(); }
+
+    Quaternion Conjugate() const { return Quaternion<T>(w, -x, -y, -z); }
+
+    Quaternion operator-() const { return Quaternion<T>(-w, -x, -y, -z); }
+    Quaternion operator+(const Quaternion &Other) const { return Quaternion<T>(w + Other.w, x + Other.x, y + Other.y, z + Other.z); }
+    Quaternion operator-(const Quaternion &Other) const { return *this + (-Other); }
+    Quaternion operator*(const T &Scalar) const { return Quaternion<T>(w * Scalar, x * Scalar, y * Scalar, z * Scalar); }
+    Quaternion operator*(const Quaternion &Other) const {
+        return Quaternion<T>(
+            w * Other.w - x * Other.x - y * Other.y - z * Other.z,
+            w * Other.x + x * Other.w + y * Other.z - z * Other.y,
+            w * Other.y - x * Other.z + y * Other.w + z * Other.x,
+            w * Other.z + x * Other.y - y * Other.x + z * Other.w
+        );
+    }
+    Quaternion operator/(const T &Scalar) const { return *this * (1 / Scalar); }
 };
 }

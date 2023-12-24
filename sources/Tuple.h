@@ -19,11 +19,11 @@ class Tuple {
 	}
 public:
 	Tuple() = default;
-	Tuple(const Tuple& other) {
-		((void)(Data[Index] = other.Data[Index]), ...);
+	Tuple(const Tuple& Other) {
+		((void)(Data[Index] = Other.Data[Index]), ...);
 	}
-	Tuple(Tuple&& other) {
-		((void)(Data[Index] = Move(other.Data[Index])), ...);
+	Tuple(Tuple&& Other) {
+		((void)(Data[Index] = Move(Other.Data[Index])), ...);
 	}
 
 	template<size_t Index> auto &Get() { return Data[Index]; }

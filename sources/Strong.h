@@ -23,8 +23,8 @@ public:
         Value -= Other.Value;
         return *this;
     }
-    Strong<T, Tag> &operator*=(const Strong<T, Tag> &other) {
-        Value *= other.Value;
+    Strong<T, Tag> &operator*=(const Strong<T, Tag> &Other) {
+        Value *= Other.Value;
         return *this;
     }
     Strong<T, Tag> &operator/=(const Strong<T, Tag> &Other) {

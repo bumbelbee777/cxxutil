@@ -22,6 +22,7 @@ A lightweight and freestanding C++20 library implementing various STL containers
 - FNV-1a algorithm and djb2 hashing algorithm for strings (`Hash<T>` and `Hash<String>` respectively).
 - Pairs and tuples (`Pair<T, U>` and `Tuple<T...>` respectively).
 - C++20 string formatting and three-way comparison support.
+- Complex numbers and quaternions (`Complex<T>` and `Quaternion<T>` respectively).
 
 And more!
 
@@ -31,7 +32,7 @@ And more!
 
 ```cxx
 #include <iostream>
-#include <All.h>
+#include <All.h> 
 
 using namespace Cxxutil;
 
